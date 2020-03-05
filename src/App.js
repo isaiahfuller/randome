@@ -6,12 +6,17 @@ import { Container } from 'bloomer';
 
 function App() {
   const [results, setResults] = useState(false);
-  const [resultData, setResultData] = useState([{}]);
+  const [resultData, setResultData] = useState([]);
+
+  function getResults(entries){
+    setResultData(entries);
+  }
+
   return (
     <Container>
-      <Search setResultData={setResultData} setResults={setResults} />
+      <Search setResultData={setResultData} getResults={getResults} />
       <hr />
-      { results ? <Results data={resultData} /> : null }
+      { results ? <Results data={resultData} visible={setResults} /> : null }
     </Container>
   );
 }

@@ -30,24 +30,30 @@ export function genreQuery(){
 }
 export function pageQuery(genres, tags, startYear, endYear, page){
     var date1, date2 = 0;
+    let genreLine1 = "";
+    let genreLine2 = "";
+    if(genres.length < 10){
+        genreLine1 = ", $genres: [String]"
+        genreLine2 = ", genre_in:$genres"
+    }
     if(startYear == null)
-        date1 = 0;
+        date1 = 10000000;
     else
         date1 = startYear * 10000;
     
     if(endYear == null)
-        date2 = 9999;
+        date2 = 99990000;
     else
         date2 = endYear * 10000;
     
     var query = `
-        query ($page: Int, $perPage: Int, $date1: FuzzyDateInt, $date2: FuzzyDateInt, $genres: [String]) {
+        query ($page: Int, $perPage: Int, $date1: FuzzyDateInt, $date2: FuzzyDateInt` + genreLine1 + `) {
             Page(page:$page, perPage:$perPage){
                 pageInfo{
                     total
                     lastPage
                 }
-                media(startDate_greater:$date1, startDate_lesser:$date2,genre_in:$genres){
+                media(type:ANIME, startDate_greater:$date1, startDate_lesser:$date2` + genreLine2 + `){
                 id
                 title {
                     romaji

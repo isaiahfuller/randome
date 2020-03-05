@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import '../App.css';
 import { genreQuery, pageQuery } from '../functions/anilist.js';
-import { Button, Field, Control, Section, Input, FieldBody } from 'bloomer';
+import { Button, Field, Control, Section, Input } from 'bloomer';
 import GenreCheckboxes from './GenreCheckboxes';
-import { Label } from 'bloomer/lib/elements/Form/Label';
-import { FieldLabel } from 'bloomer/lib/elements/Form/Field/FieldLabel';
 
 //{genreVisibility ? <GenreCheckboxes data={genreQuery()} /> : null}
 
@@ -24,11 +22,9 @@ function Search(props) {
   }
 
   function useSearch(e){
-    console.log(startYearInput);
-    console.log(endYearInput);
-    console.log(selectedGenres);
     pageQuery(selectedGenres,[],startYearInput,endYearInput, 1).then(data => {
       let entries = [];
+      console.log(data)
       console.log(data.data.Page.media)
       console.log(data.data.Page.pageInfo.lastPage)
       console.log(data.data.Page.pageInfo.total)
@@ -43,8 +39,9 @@ function Search(props) {
         entries.push([t1, t2]);
       }
       console.log(entries);
-      props.setResultData(data.data.Page.media);
-      props.setResults(true);
+      props.setResultData(entries);
+      //props.setResultData(data.data.Page.media);
+      props.getResults(entries);
     });
   }
 
@@ -84,7 +81,7 @@ function Search(props) {
           </Control>
         </Field>
         <Field className={genreVisibility ? "GenreVisible" : "GenreHidden"}>
-          <GenreCheckboxes data={genreQuery()} selected={selectedGenres} setSelected={setSelectedGenres} />
+          <GenreCheckboxes data={genreQuery} selected={selectedGenres} setSelected={setSelectedGenres} />
         </Field>
       </Section>
   )
