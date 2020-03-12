@@ -21,27 +21,33 @@ function Search(props) {
       setEndYearinput(e.target.value)
   }
 
-  function useSearch(e){
+  async function useSearch(e){
+    props.setResults(false)
     pageQuery(selectedGenres,[],startYearInput,endYearInput, 1).then(data => {
       let entries = [];
-      console.log(data)
-      console.log(data.data.Page.media)
-      console.log(data.data.Page.pageInfo.lastPage)
-      console.log(data.data.Page.pageInfo.total)
-      for(let i=0; i<12; i++){
+      let anime = [];
+      for(let i=0; i<6; i++){
         let t1, t2 = 0;
-        t1 = Math.floor((Math.random() * 6) + 1);
+        t1 = Math.floor(Math.random() * 6);
         while(true){
           t2 = Math.floor((Math.random() * data.data.Page.pageInfo.lastPage) + 1);
           if((t1 * t2) < data.data.Page.pageInfo.total || data.data.Page.pageInfo.total < 1)
             break;
         }
-        entries.push([t1, t2]);
+        entries.push([t2, t1]);
       }
-      console.log(entries);
-      props.setResultData(entries);
-      //props.setResultData(data.data.Page.media);
-      props.getResults(entries);
+      props.setResultData(data.data.Page.media);
+      entries.map((entry) => {
+        pageQuery(selectedGenres,[],startYearInput,endYearInput, entry[0]).then((res) => {
+          anime.push(res.data.Page.media[entry[1]])
+          if(anime.length === 6){
+            props.setResultData(anime)
+            props.setResults(true)
+            return 1;
+          }
+        })
+        return 0;
+      })
     });
   }
 

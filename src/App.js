@@ -8,15 +8,11 @@ function App() {
   const [results, setResults] = useState(false);
   const [resultData, setResultData] = useState([]);
 
-  function getResults(entries){
-    setResultData(entries);
-  }
-
   return (
     <Container>
-      <Search setResultData={setResultData} getResults={getResults} />
+      <Search setResultData={setResultData} setResults={setResults} />
       <hr />
-      { results ? <Results data={resultData} visible={setResults} /> : null }
+      { results ? <Results data={resultData} /> : null }
     </Container>
   );
 }
